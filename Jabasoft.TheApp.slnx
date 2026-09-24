@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/Jabasoft/">
+    <Project Path="../Jabasoft/Jabasoft.App/Jabasoft.App.csproj" />
+  </Folder>
+  <Folder Name="/LocalAiStudio/">
+    <Project Path="../JabaSoft.LocalAiStudio/LocalAiStudio.App/LocalAiStudio.App.csproj" />
+  </Folder>
+  <Folder Name="/Jabasoft.Base/">
+    <Project Path="../Jabasoft.Base/Jabasoft.Base.csproj" />
+    <Project Path="../Jabasoft.Base/Jabasoft.Ai.Data/Jabasoft.Ai.Data.csproj" />
+  </Folder>
+  <Folder Name="/Jabasoft.Broker/">
+    <Project Path="../Jabasoft.Broker/Jabasoft.Broker.csproj" />
+  </Folder>
+  <Folder Name="/Jabasoft.Stylebook/">
+    <Project Path="../Jabasoft.Stylebook/Stylebook.Components/Stylebook.Components.csproj" />
+    <Project Path="../Jabasoft.Stylebook/Stylebook.Data/Stylebook.Data.csproj" />
+    <Project Path="../Jabasoft.Stylebook/Stylebook.Playground/Stylebook.Playground.csproj" />
+  </Folder>
+  <Folder Name="/StudioStarter/src/">
+    <Project Path="../StudioStarter/src/StudioStarter.Core/StudioStarter.Core.csproj" />
+    <Project Path="../StudioStarter/src/StudioStarter.Desktop/StudioStarter.Desktop.csproj" />
+    <Project Path="../StudioStarter/src/StudioStarter.Infrastructure/StudioStarter.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/StudioStarter/tests/">
+    <Project Path="../StudioStarter/tests/StudioStarter.SmokeTests/StudioStarter.SmokeTests.csproj" />
+  </Folder>
+</Solution>
