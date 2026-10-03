@@ -13,6 +13,11 @@ if not errorlevel 1 (
     exit /b 0
 )
 
+rem Oude achtergronddiensten opruimen voor we gaan bouwen: de AI-broker houdt bestanden van de gedeelde bibliotheek
+rem vast en laat het bouwen anders mislukken. Alleen als er geen app van de familie draait - die heeft ze misschien nodig.
+rem (Jabasoft zelf draait hier niet: dat is hierboven al afgehandeld.)
+powershell -NoProfile -Command "$apps='LocalAiStudio.App','TabStudio.App','ImageFunn.App','Stylebook.Playground'; if(-not (Get-Process -Name $apps -ErrorAction SilentlyContinue)){ foreach($poort in 5310,5320,5330){ Get-NetTCPConnection -LocalPort $poort -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } }; Get-Process -Name 'Jabasoft.Broker' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue }"
+
 title Jabasoft - bouwen...
 echo Jabasoft bouwen...
 dotnet build "%SOLUTION%" --nologo -v quiet
