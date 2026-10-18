@@ -3,8 +3,8 @@ rem Bouwt eerst de hele Jabasoft-solution (incrementeel: een paar seconden als e
 rem en start daarna de applicatie. Mislukt het bouwen, dan blijft dit venster open met de fouten
 rem en wordt Jabasoft niet gestart.
 
-set "SOLUTION=C:\Repos\Jabasoft.TheApp\Jabasoft.TheApp.slnx"
-set "APP=C:\Repos\Jabasoft\Jabasoft.App\bin\Debug\net10.0-windows\Jabasoft.App.exe"
+set "SOLUTION=D:\GitHub\Jabasoft.TheApp\Jabasoft.TheApp.slnx"
+set "APP=D:\GitHub\Jabasoft\Jabasoft.App\bin\Debug\net10.0-windows\Jabasoft.App.exe"
 
 tasklist /FI "IMAGENAME eq Jabasoft.App.exe" 2>nul | find /I "Jabasoft.App.exe" >nul
 if not errorlevel 1 (
