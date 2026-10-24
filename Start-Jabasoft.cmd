@@ -3,8 +3,8 @@ rem Bouwt eerst de hele Jabasoft-solution (incrementeel: een paar seconden als e
 rem en start daarna de applicatie. Mislukt het bouwen, dan blijft dit venster open met de fouten
 rem en wordt Jabasoft niet gestart.
 
-set "SOLUTION=D:\GitHub\Jabasoft.TheApp\Jabasoft.TheApp.slnx"
-set "APP=D:\GitHub\Jabasoft\Jabasoft.App\bin\Debug\net10.0-windows\Jabasoft.App.exe"
+set "SOLUTION=D:\Repos\Jabasoft.TheApp\Jabasoft.TheApp.slnx"
+set "APP=D:\Repos\Jabasoft\Jabasoft.App\bin\Debug\net10.0-windows\Jabasoft.App.exe"
 
 tasklist /FI "IMAGENAME eq Jabasoft.App.exe" 2>nul | find /I "Jabasoft.App.exe" >nul
 if not errorlevel 1 (
@@ -16,7 +16,7 @@ if not errorlevel 1 (
 rem Oude achtergronddiensten opruimen voor we gaan bouwen: de AI-broker houdt bestanden van de gedeelde bibliotheek
 rem vast en laat het bouwen anders mislukken. Alleen als er geen app van de familie draait - die heeft ze misschien nodig.
 rem (Jabasoft zelf draait hier niet: dat is hierboven al afgehandeld.)
-powershell -NoProfile -Command "$apps='LocalAiStudio.App','TabStudio.App','ImageFunn.App','Stylebook.Playground'; if(-not (Get-Process -Name $apps -ErrorAction SilentlyContinue)){ foreach($poort in 5310,5320,5330){ Get-NetTCPConnection -LocalPort $poort -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } }; Get-Process -Name 'Jabasoft.Broker' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue }"
+powershell -NoProfile -Command "$apps='Stylebook.Playground'; if(-not (Get-Process -Name $apps -ErrorAction SilentlyContinue)){ foreach($poort in 5310,5320,5330){ Get-NetTCPConnection -LocalPort $poort -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } }; Get-Process -Name 'Jabasoft.Broker' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue }"
 
 title Jabasoft - bouwen...
 echo Jabasoft bouwen...

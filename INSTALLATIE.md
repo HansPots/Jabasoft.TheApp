@@ -4,7 +4,7 @@ Alles wat nodig is om de JabaSoft-familie (Jabasoft, Stylebook, AI Studio, TabSt
 nieuwe Windows-pc te laten draaien. Opgesteld op 12-10-2026 vanaf de werkende pc; de versienummers zijn wat
 daar draait en getest is.
 
-> **Belangrijk:** de apps verwijzen naar elkaar via vaste paden onder `D:\GitHub\...` (zie de
+> **Belangrijk:** de apps verwijzen naar elkaar via vaste paden onder `D:\Repos\...` (zie de
 > `appsettings.json` van elke app). Zet de repo's dus precies daar neer, met precies deze mapnamen.
 
 ---
@@ -84,11 +84,11 @@ ollama pull nomic-embed-text-v2-moe
 
 ## 3. Repo's ophalen
 
-Alles komt onder `D:\GitHub`:
+Alles komt onder `D:\Repos`:
 
 ```
-mkdir D:\GitHub
-cd D:\GitHub
+mkdir D:\Repos
+cd D:\Repos
 git clone -b development https://github.com/HansPots/Jabasoft.git
 git clone -b development https://github.com/HansPots/Jabasoft.Base.git
 git clone -b development https://github.com/HansPots/Jabasoft.Broker.git
@@ -102,7 +102,7 @@ git clone -b main        https://github.com/HansPots/StudioStarter.git
 
 StudioStarter is onderdeel van `Jabasoft.TheApp.slnx`: zonder die map mislukt het bouwen.
 
-`D:\GitHub\TestApp` staat niet op GitHub; zet hem alleen over (bijv. via OneDrive) als je hem gebruikt.
+`D:\Repos\TestApp` staat niet op GitHub; zet hem alleen over (bijv. via OneDrive) als je hem gebruikt.
 
 ---
 
@@ -153,10 +153,10 @@ serverinstellingen, of laat de `MOVE`-regels weg als de standaardmap goed is.)
 
 Elke service heeft een eigen `.venv`; de apps starten die zelf (de paden staan vast in de code).
 
-### TabStudio-audio (`D:\GitHub\JabaSoft.TabStudio\TabStudio.Audio`)
+### TabStudio-audio (`D:\Repos\JabaSoft.TabStudio\TabStudio.Audio`)
 
 ```
-cd D:\GitHub\JabaSoft.TabStudio\TabStudio.Audio
+cd D:\Repos\JabaSoft.TabStudio\TabStudio.Audio
 py -3.11 -m venv .venv
 .venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
@@ -164,10 +164,10 @@ py -3.11 -m venv .venv
 Draait op de CPU (geen CUDA nodig). Bij het eerste gebruik worden modellen opgehaald: Demucs
 (`htdemucs_6s`), CREPE, het GAPS-gitaarmodel (Hugging Face) en Beat This.
 
-### ImageFunn-beeld (`D:\GitHub\JabaSoft.ImageFunn\ImageFunn.Image`)
+### ImageFunn-beeld (`D:\Repos\JabaSoft.ImageFunn\ImageFunn.Image`)
 
 ```
-cd D:\GitHub\JabaSoft.ImageFunn\ImageFunn.Image
+cd D:\Repos\JabaSoft.ImageFunn\ImageFunn.Image
 py -3.11 -m venv .venv
 .venv\Scripts\python.exe -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
 .venv\Scripts\python.exe -m pip install -r requirements.txt
@@ -181,18 +181,15 @@ eerste gebruik opgehaald. Zet eerst `set HF_HUB_DISABLE_XET=1` - anders gaat het
 ## 6. Bouwen en starten
 
 ```
-D:\GitHub\Jabasoft.TheApp\Start-Jabasoft.cmd
+D:\Repos\Jabasoft.TheApp\Start-Jabasoft.cmd
 ```
 
-Dit bouwt de Jabasoft-solution (Jabasoft, Base, Broker, Stylebook, AI Studio, StudioStarter) en start
-Jabasoft. TabStudio en ImageFunn zijn aparte projecten; bouw die één keer:
+Dit bouwt de Jabasoft-solution (Jabasoft, Base, Broker, Stylebook, AI Studio, TabStudio, ImageFunn,
+StudioStarter) en start Jabasoft.
 
-```
-dotnet build D:\GitHub\JabaSoft.TabStudio\TabStudio.App
-dotnet build D:\GitHub\JabaSoft.ImageFunn\ImageFunn.App
-```
-
-Daarna start je alles vanuit Jabasoft. De broker en de Python-services starten automatisch.
+AI Studio, TabStudio en ImageFunn zijn geen losse programma's meer: het zijn onderdelen van Jabasoft en
+openen in hetzelfde venster, met hun eigen menu (de Home-knop brengt je terug). Alleen Stylebook start
+nog als eigen programma. De broker en de Python-services starten automatisch zodra je een onderdeel opent.
 
 ### Poorten (als iets niet bereikbaar is)
 
@@ -227,8 +224,8 @@ Niets hiervan is nodig om te starten, maar zonder begin je op die punten opnieuw
 - [ ] Git, .NET 10 SDK, SQL Server 2025 Developer, ODBC Driver 18 geïnstalleerd
 - [ ] Python 3.11, FFmpeg, Deno geïnstalleerd (`ffmpeg -version` werkt in een nieuwe terminal)
 - [ ] NVIDIA-driver (voor ImageFunn), Ollama en/of LM Studio met modellen
-- [ ] Alle negen repo's gekloond in `D:\GitHub`
+- [ ] Alle negen repo's gekloond in `D:\Repos`
 - [ ] Vier databases teruggezet
 - [ ] Beide `.venv`'s aangemaakt en pakketten geïnstalleerd
 - [ ] `Start-Jabasoft.cmd` bouwt zonder fouten en Jabasoft start
-- [ ] TabStudio en ImageFunn één keer gebouwd en vanuit Jabasoft te openen
+- [ ] AI Studio, TabStudio en ImageFunn vanuit het Jabasoft-menu te openen
