@@ -35,7 +35,7 @@ controleren met `winget search <naam>` of de id nog klopt.
 | Git | repo's ophalen | `winget install Git.Git` | 2.55 |
 | .NET 10 SDK | alle apps bouwen (net10.0-windows) | `winget install Microsoft.DotNet.SDK.10` | 10.0.401 |
 | WebView2 Runtime | tab-weergave (AlphaTab) en AI Studio | zit in Windows 11; anders `winget install Microsoft.EdgeWebView2Runtime` | 154 |
-| SQL Server 2025 Developer | databases | installer van microsoft.com ("SQL Server 2025 Developer"); standaardinstantie **MSSQLSERVER**, **Windows-authenticatie** | 17.0 (MSSQL17) |
+| SQL Server 2025 Express LocalDB | databases | komt mee met Visual Studio 2026 (workload "Gegevensopslag en -verwerking"), of los via de SQL Server 2025 Express-installer (*Download Media* > **LocalDB**); instantie **(localdb)\MSSQLLocalDB**, Windows-authenticatie | 17.0 |
 | ODBC Driver 18 for SQL Server | TabStudio (Python, pyodbc) | ✱ `winget install Microsoft.msodbcsql.18` | 18 |
 | sqlcmd | backups terugzetten, scripts | komt mee met de SQL Server-clienttools / ODBC-tools | 18 (ODBC) |
 
@@ -108,7 +108,10 @@ StudioStarter is onderdeel van `Jabasoft.TheApp.slnx`: zonder die map mislukt he
 
 ## 4. Databases terugzetten
 
-De apps gebruiken vier databases op `localhost` (Windows-authenticatie):
+De apps gebruiken vier databases in LocalDB, op `(localdb)\MSSQLLocalDB` (Windows-authenticatie). Dat staat
+in de connectiestrings van `Jabasoft.Broker\appsettings.json`, `Jabasoft.Stylebook\Stylebook.Playground\appsettings.json`
+en `JabaSoft.TabStudio\TabStudio.Audio\correcties.py`. Een gewone SQL Server-instantie (`localhost`) wordt
+niet meer gebruikt.
 
 | Database | Gebruikt door |
 |---|---|
@@ -121,26 +124,28 @@ De apps gebruiken vier databases op `localhost` (Windows-authenticatie):
 `C:\Users\macpo\OneDrive\Documenten\SQL Server Management Studio 22\Code Snippets\SQL\backup`
 (bijv. `JabaSoftTabStudio_20261012_2119.bak`).
 
-1. Kopieer de `.bak`-bestanden naar een map die SQL Server mag lezen, bijv. `C:\Users\Public\Documents\SqlBackup`.
-2. Zet ze terug (in SSMS: *Databases > Restore Database*, of met sqlcmd). Pas de datum in de namen aan:
+1. Kopieer de `.bak`-bestanden naar een map die LocalDB mag lezen, bijv. `C:\Users\Public\Documents\SqlBackup`.
+2. Zet ze terug (in SSMS verbinden met `(localdb)\MSSQLLocalDB`, dan *Databases > Restore Database*; of met
+   `sqlcmd -S "(localdb)\MSSQLLocalDB" -E -i terugzetten.sql`). Pas de datum in de namen en `<gebruiker>` aan -
+   LocalDB zet zijn databasebestanden standaard in je gebruikersmap:
 
 ```sql
 RESTORE DATABASE JabasoftBase FROM DISK = N'C:\Users\Public\Documents\SqlBackup\JabasoftBase_20261012_2119.bak'
-  WITH MOVE 'JabasoftBase' TO N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\JabasoftBase.mdf',
-       MOVE 'JabasoftBase_log' TO N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\JabasoftBase_log.ldf';
+  WITH MOVE 'JabasoftBase' TO N'C:\Users\<gebruiker>\JabasoftBase.mdf',
+       MOVE 'JabasoftBase_log' TO N'C:\Users\<gebruiker>\JabasoftBase_log.ldf';
 RESTORE DATABASE JabasoftAi FROM DISK = N'C:\Users\Public\Documents\SqlBackup\JabasoftAi_20261012_2119.bak'
-  WITH MOVE 'JabasoftAi' TO N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\JabasoftAi.mdf',
-       MOVE 'JabasoftAi_log' TO N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\JabasoftAi_log.ldf';
+  WITH MOVE 'JabasoftAi' TO N'C:\Users\<gebruiker>\JabasoftAi.mdf',
+       MOVE 'JabasoftAi_log' TO N'C:\Users\<gebruiker>\JabasoftAi_log.ldf';
 RESTORE DATABASE JabasoftStylebook FROM DISK = N'C:\Users\Public\Documents\SqlBackup\JabasoftStylebook_20261012_2119.bak'
-  WITH MOVE 'JabasoftStylebook' TO N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\JabasoftStylebook.mdf',
-       MOVE 'JabasoftStylebook_log' TO N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\JabasoftStylebook_log.ldf';
+  WITH MOVE 'JabasoftStylebook' TO N'C:\Users\<gebruiker>\JabasoftStylebook.mdf',
+       MOVE 'JabasoftStylebook_log' TO N'C:\Users\<gebruiker>\JabasoftStylebook_log.ldf';
 RESTORE DATABASE JabaSoftTabStudio FROM DISK = N'C:\Users\Public\Documents\SqlBackup\JabaSoftTabStudio_20261012_2119.bak'
-  WITH MOVE 'JabaSoftTabStudio' TO N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\JabaSoftTabStudio.mdf',
-       MOVE 'JabaSoftTabStudio_log' TO N'C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\DATA\JabaSoftTabStudio_log.ldf';
+  WITH MOVE 'JabaSoftTabStudio' TO N'C:\Users\<gebruiker>\JabaSoftTabStudio.mdf',
+       MOVE 'JabaSoftTabStudio_log' TO N'C:\Users\<gebruiker>\JabaSoftTabStudio_log.ldf';
 ```
 
-(Andere SQL Server-versie? Dan heet de map `MSSQL16...` of iets anders - kijk in SSMS bij de
-serverinstellingen, of laat de `MOVE`-regels weg als de standaardmap goed is.)
+(LocalDB nog niet gestart? `sqllocaldb start MSSQLLocalDB`. Bestaat de instantie niet:
+`sqllocaldb create MSSQLLocalDB -s`.)
 
 **Zonder backup (helemaal leeg beginnen):** `JabasoftAi` maakt de broker zelf aan bij de eerste start en
 `JabasoftStylebook` de Stylebook-app; `JabaSoftTabStudio` maak je aan met de scripts in
@@ -221,11 +226,11 @@ Niets hiervan is nodig om te starten, maar zonder begin je op die punten opnieuw
 
 ## 8. Controlelijst
 
-- [ ] Git, .NET 10 SDK, SQL Server 2025 Developer, ODBC Driver 18 geïnstalleerd
+- [ ] Git, .NET 10 SDK, SQL Server 2025 Express LocalDB, ODBC Driver 18 geïnstalleerd
 - [ ] Python 3.11, FFmpeg, Deno geïnstalleerd (`ffmpeg -version` werkt in een nieuwe terminal)
 - [ ] NVIDIA-driver (voor ImageFunn), Ollama en/of LM Studio met modellen
 - [ ] Alle negen repo's gekloond in `D:\Repos`
-- [ ] Vier databases teruggezet
+- [ ] Vier databases teruggezet in `(localdb)\MSSQLLocalDB`
 - [ ] Beide `.venv`'s aangemaakt en pakketten geïnstalleerd
 - [ ] `Start-Jabasoft.cmd` bouwt zonder fouten en Jabasoft start
 - [ ] AI Studio, TabStudio en ImageFunn vanuit het Jabasoft-menu te openen
